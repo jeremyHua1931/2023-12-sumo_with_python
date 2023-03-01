@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2023-02-23 16:31:33 by Eclipse SUMO sumo Version 1.16.0
+-->
+
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/sumoConfiguration.xsd">
+
+    <input>
+        <net-file value="map.net.xml" />
+        <route-files value="map.rou.xml" />
+
+    </input>
+
+    <gui_only>
+        <gui-settings-file value="default.settings.xml" />
+    </gui_only>
+
+
+</configuration>
