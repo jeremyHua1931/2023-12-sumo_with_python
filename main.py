@@ -39,7 +39,6 @@ if __name__ == "__main__":
     # generate two files: info_edge.txt , info_junction.txt
     utils.get_net_info()
 
-
     # You should design and call simulation functions between the following comment lines
     # Notice: you should choose the appropriate sumoCmd, or you can define it
     # by yourself
@@ -49,10 +48,9 @@ if __name__ == "__main__":
     start_time = time.time()
     print("======================Start!======================")
 
-
-    mylib.basic_simulation(sumo_cmd)
-    mylib.trajectory_to_csv(sumo_cmd)
-    mylib.get_next_junction(sumo_cmd)
+    # mylib.basic_simulation(sumo_cmd)
+    # mylib.trajectory_to_csv(sumo_cmd)
+    # mylib.get_next_junction(sumo_cmd)
     mylib.modify_traffic_control(sumo_cmd)
 
     print("=======================End!=======================")

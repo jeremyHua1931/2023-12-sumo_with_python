@@ -11,6 +11,7 @@ import pandas as pd
 from datetime import datetime
 import traci
 import sumolib
+import src.utils.colors as color
 
 from src.utils.utils import get_datetime, flatten_list
 
@@ -37,7 +38,7 @@ def basic_simulation(sumo_cmd):
         traci.gui.setSchema("View #0", "real world")
 
     while traci.simulation.getMinExpectedNumber() > 0:
-        step = step + 1
+        step += 1
         if step > 400:
             break
 
@@ -52,6 +53,7 @@ def basic_simulation(sumo_cmd):
         # log/log_vehicle.txt
         print("vehicle_number: " + str(len(vehicle_id_list)), file=f_log_vehicle)
         print("vehicle_id_list: " + str(vehicle_id_list), file=f_log_vehicle)
+        # print(traci.vehicle.getRoute(vehicle_id_list[0]))
 
     print(datetime.now(), file=f_log_vehicle)
     f_log_vehicle.close()
@@ -78,7 +80,7 @@ def trajectory_to_csv(sumo_cmd):
         traci.gui.setSchema("View #0", "real world")
 
     while traci.simulation.getMinExpectedNumber() > 0 & step < 400:
-        step = step + 1
+        step += 1
         if step > 400:
             break
 
@@ -169,7 +171,7 @@ def get_next_junction(sumo_cmd):
     junction_info = []
 
     while traci.simulation.getMinExpectedNumber() > 0:
-        step = step + 1
+        step += 1
         if step > 400:
             break
 
@@ -248,8 +250,8 @@ def modify_traffic_control(sumo_cmd):
 
     """
     step = 0
-    f_log__modify_traffic = open('log/log_modify_traffic.txt', 'w')
-    print(datetime.now(), file=f_log__modify_traffic)
+    f_log_modify_traffic = open('log/log_modify_traffic.txt', 'w')
+    print(datetime.now(), file=f_log_modify_traffic)
 
     traci.start(sumo_cmd)
     print("Execute: modify_traffic_control()")
@@ -257,24 +259,88 @@ def modify_traffic_control(sumo_cmd):
         traci.gui.setSchema("View #0", "real world")
 
     while traci.simulation.getMinExpectedNumber() > 0:
-        step = step + 1
+        step += 1
         if step > 400:
             break
 
         traci.simulationStep()
-        print(
-            "====================the {0} st step====================".format(
-                step),
-            file=f_log__modify_traffic)
 
         vehicle_id_list = traci.vehicle.getIDList()
-        print(
-            "Existing vehicle id: ",
-            vehicle_id_list,
-            file=f_log__modify_traffic)
+        vehicle_id_list_int = list(map(int, vehicle_id_list))
+        new_vehicle_list = []
+        for vehicle in vehicle_id_list_int:
+            if vehicle < 0:
+                new_vehicle_list.append(vehicle)
 
-    print(datetime.now(), file=f_log__modify_traffic)
-    f_log__modify_traffic.close()
+        if len(new_vehicle_list) > 0:
+            print("====================the {0} st step====================".format(
+                step), file=f_log_modify_traffic)
+            print(
+                "Existing and new vehicle id: ",
+                new_vehicle_list,
+                file=f_log_modify_traffic)
+
+        # traci.vehicle.add() 向仿真中添加新车辆的函数，具有以下参数：
+        # vehID：车辆ID，必须是唯一的字符串。
+        # routeID：车辆将要按照的路线ID。
+        # typeID：车辆类型ID，默认为DEFAULT_VEHTYPE。
+        # depart：车辆出发时间，默认为now。
+        # departLane：车辆出发的车道，默认为first。
+        # departPos：车辆出发位置，默认为base。
+        # departSpeed：车辆出发速度，默认为0。
+        # arrivalLane：车辆到达的车道，默认为current。
+        # arrivalPos：车辆到达位置，默认为max。
+        # arrivalSpeed：车辆到达速度，默认为current。
+        # fromTaz：车辆出发区域（TAZ）ID，默认为空字符串。
+        # toTaz：车辆到达区域（TAZ）ID，默认为空字符串。
+        # line：车辆所在的线路ID，默认为空字符串。
+        # personCapacity：车辆的最大载客量，默认为0。
+        # personNumber：车辆的当前载客数，默认为0。
+
+        # add(self, vehID, routeID, typeID="DEFAULT_VEHTYPE", depart="now",
+        #     departLane="first", departPos="base", departSpeed="0",
+        #     arrivalLane="current", arrivalPos="max", arrivalSpeed="current",
+        #     fromTaz="", toTaz="", line="", personCapacity=0, personNumber=0):
+        # """
+        # Add a new vehicle (new style with all possible parameters)
+        # If routeID is "", the vehicle will be inserted on a random network edge
+        # if route consists of two disconnected edges, the vehicle will be treated
+        # like a <trip> and use the fastest route between the two edges.
+        # """
+
+        # departLane definition
+        # must be one of ("random", "free", "allowed", "best", "first", or an int>=0)
+        # departLane
+        # 参数用于指定车辆出发时所在的道路上的车道，其取值为以下之一：
+        # "random"：随机选择一个可用车道
+        # "free"：选择一个可用的自由流车道
+        # "allowed"：选择一个可用的允许车辆行驶的车道
+        # "best"：选择一个最佳车道
+        # "first"：选择编号最小的车道
+        # 一个非负整数：选择编号为该整数的车道
+        # arrivalLane
+        # 参数可以填写以下两种类型的参数：
+        # "current"：表示车辆会停在当前所在的车道上。
+        # 一个非负整数：表示车辆应该到达的车道编号。
+        # 需要注意的是，如果 arrivalLane
+        # 参数为一个整数，则必须保证该车道是车辆可达的。
+        # TODO: https://sumo.dlr.de/pydoc/traci._vehicle.html#VehicleDomain-add
+        # arrivalLane="-998139957"
+
+        if step % 10 == 0:
+            print("====================the {0} st step====================".format(
+                step), file=f_log_modify_traffic)
+            traci.vehicle.add(vehID=str(-step), routeID="", typeID="DEFAULT_VEHTYPE", depart="now",
+                              departLane="best", departPos="base", departSpeed="0",
+                              arrivalLane="current", arrivalPos="max", arrivalSpeed="current",
+                              fromTaz="", toTaz="", line="", personCapacity=0, personNumber=0)
+            traci.vehicle.setColor(str(-step), color.blue)
+            # print("last id: ", vehicle_id_list[-1], " : ", traci.vehicle.getRoute(vehicle_id_list[-1]))
+            # print("new  id: ", -step, " : ", traci.vehicle.getRoute(str(-step)))
+            print("New vehicle id is {}, color is {}, ".format(str(-step), traci.vehicle.getColor(str(-step))),
+                  file=f_log_modify_traffic)
 
     traci.close()
+    print(datetime.now(), file=f_log_modify_traffic)
+    f_log_modify_traffic.close()
     print("modify_traffic_control is completed !")
