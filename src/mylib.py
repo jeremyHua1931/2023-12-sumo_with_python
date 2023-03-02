@@ -24,7 +24,7 @@ def basic_simulation(sumo_cmd):
     Args:
     sumo_cmd: A string that contains the SUMO command with all the necessary parameters for the simulation.
 
-    Returns:
+    Returns: the log_*.txt is in /log folder
 
     """
     step = 0
@@ -66,7 +66,7 @@ def trajectory_to_csv(sumo_cmd):
     Args:
     sumo_cmd: A string that contains the SUMO command with all the necessary parameters for the simulation.
 
-    Returns:
+    Returns: the *.csv is in /output folder
 
     """
     step = 0
@@ -151,7 +151,7 @@ def get_next_junction(sumo_cmd):
     Args:
         sumo_cmd: A string that contains the SUMO command with all the necessary parameters for the simulation.
 
-    Returns:
+    Returns: the *.csv is in /output folder
 
     """
     step = 0
@@ -244,7 +244,7 @@ def modify_traffic_control(sumo_cmd):
     Args:
         sumo_cmd: A string that contains the SUMO command with all the necessary parameters for the simulation.
 
-    Returns:
+    Returns: none
 
     """
     step = 0

@@ -1,0 +1,4 @@
+pandas==1.5.3
+pytz==2022.7.1
+sumolib==1.16.0
+traci==1.16.0

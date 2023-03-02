@@ -8,15 +8,15 @@
 2023/3/1 23:26   HuaZhangzhao    1.0          some utils function
 """
 import pytz
-from datetime import datetime
-
 import sumolib
+from datetime import datetime
 
 
 def get_datetime():
     """
+    This function is used to format the time
 
-    Returns:
+    Returns: such as "2023-03-02 11:42:07.701"
 
     """
     utc_now = pytz.utc.localize(datetime.now())
@@ -26,11 +26,12 @@ def get_datetime():
 
 def flatten_list(_2d_list):
     """
+    This function is used to deal with some list on special situation
 
     Args:
-        _2d_list:
+        _2d_list: input list
 
-    Returns:
+    Returns: output list
 
     """
     flat_list = []
@@ -46,7 +47,7 @@ def flatten_list(_2d_list):
 def get_net_info():
     """
     This function is used to get junction and edge information with sumolib
-    Returns:
+    Returns: info_*.txt is in /sumo/info folder
 
     """
     print("Execute: get_net_info()")
