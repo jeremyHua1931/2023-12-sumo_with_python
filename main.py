@@ -10,6 +10,7 @@
 import os
 import sys
 import time
+import src.utils.utils as utils
 
 from src import mylib
 
@@ -30,7 +31,14 @@ def check_env():
 
 if __name__ == "__main__":
 
+    # check $SUMO_HOME envrionment
     check_env()
+
+    # get junctions and edges infomation about map.net with sumolib
+    # store in sumo/info
+    # generate two files: info_edge.txt , info_junction.txt
+    utils.get_net_info()
+
 
     # You should design and call simulation functions between the following comment lines
     # Notice: you should choose the appropriate sumoCmd, or you can define it
@@ -41,13 +49,12 @@ if __name__ == "__main__":
     start_time = time.time()
     print("======================Start!======================")
 
-    # =====================Start !======================
 
-    # mylib.basic_simulation(sumo_cmd)
-    # mylib.trajectory_to_xlsx(sumo_cmd)
+    mylib.basic_simulation(sumo_cmd)
+    mylib.trajectory_to_csv(sumo_cmd)
     mylib.get_next_junction(sumo_cmd)
+    mylib.modify_traffic_control(sumo_cmd)
 
-    # ======================End ! ======================
     print("=======================End!=======================")
     end_time = time.time()
     run_time = round(end_time - start_time, 2)
